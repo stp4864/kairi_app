@@ -17,11 +17,9 @@ for code in codes:
         response = requests.get(url, timeout=10)
         soup = BeautifulSoup(response.content, "html.parser")
 
-        # 銘柄名取得
         name_tag = soup.find("h1")
         name = name_tag.get_text(strip=True) if name_tag else "不明"
 
-        # 現在値取得
         current_price_tag = soup.select_one("dt:contains('取引所価格') + dd .fundprice__price")
         if current_price_tag:
             current_str = current_price_tag.get_text(strip=True).replace(",", "").replace("円", "")
@@ -29,7 +27,6 @@ for code in codes:
         else:
             raise ValueError("現在値が見つかりません")
 
-        # 基準価格取得
         base_price_tag = soup.select_one("dt:contains('基準価額') + dd .fundprice__price")
         if base_price_tag:
             base_str = base_price_tag.get_text(strip=True).replace(",", "").replace("円", "")
@@ -37,15 +34,12 @@ for code in codes:
         else:
             raise ValueError("基準価格が見つかりません")
 
-        # 現在値の桁数に合わせて基準価格を補正
         digits_current = len(str(int(current_price)))
         digits_base = len(str(int(base_raw)))
         base_price = base_raw / (10 ** (digits_base - digits_current)) if digits_base > digits_current else base_raw
 
-        # 乖離率計算
         kairi = ((current_price - base_price) / base_price) * 100
 
-        # 受益権口数取得
         unit_value = "不明"
         dl_tags = soup.find_all("dl", class_="dl__summary-2col")
         for dl in dl_tags:
@@ -68,19 +62,23 @@ for code in codes:
     except Exception as e:
         st.error(f"取得失敗: [{code}] {url} / 理由: {e}")
 
-# 表示（AgGrid使用）
 if data:
     df = pd.DataFrame(data)
     df["abs_乖離率"] = df["乖離率(%)"].abs()
     df_sorted = df.sort_values(by="abs_乖離率", ascending=False).drop(columns=["abs_乖離率"])
 
     gb = GridOptionsBuilder.from_dataframe(df_sorted)
-    gb.configure_default_column(resizable=True, filter=True, sortable=True)
-    gb.configure_column("銘柄コード", pinned="left")
-    gb.configure_column("乖離率(%)", type=["numericColumn"], valueFormatter="x.toFixed(2) + '%'")
+    gb.configure_default_column(resizable=True, sortable=True, filter=True)
+
+    # 列の幅調整（必要に応じて微調整OK）
+    gb.configure_column("銘柄コード", pinned="left", width=70)
+    gb.configure_column("銘柄名", width=100)
+    gb.configure_column("現在値", width=70)
+    gb.configure_column("基準価格", width=70)
+    gb.configure_column("乖離率(%)", width=70, type=["numericColumn"], valueFormatter="x.toFixed(2) + '%'")
+    gb.configure_column("受益権口数", width=100)
 
     grid_options = gb.build()
-
-    AgGrid(df_sorted, gridOptions=grid_options, height=500, fit_columns_on_grid_load=False)
+    AgGrid(df_sorted, gridOptions=grid_options, height=600, fit_columns_on_grid_load=False)
 else:
     st.warning("データが取得できませんでした。")
