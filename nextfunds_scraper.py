@@ -2,7 +2,9 @@ import streamlit as st
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+from st_aggrid import AgGrid, GridOptionsBuilder
 
+st.set_page_config(layout="wide")
 st.title("NEXT FUNDS 基準価格 vs 現在値（乖離率順）")
 
 codes = ["1306", "1309", "1311", "1319", "1321", "1325", "1328", "1343", "1357", "1472", "1480", "1489", "1545", "1546", "1559", "1560", "1570", "1571", "1577", "1591", "159A", "1615", "1617", "1618", "1619", "1620", "1621", "1622", "1623", "1624", "1625", "1626", "1627", "1628", "1629", "1630", "1631", "1632", "1633", "1678", "1699", "200A", "2083", "2084", "2251", "2510", "2511", "2512", "2513", "2514", "2515", "2518", "2519", "2529", "2529", "2554", "2633", "2634", "2635", "2643", "2647", "2648", "2845", "2846", "2850", "2859", "2860", "2863", "294A", "346A"]
@@ -43,7 +45,7 @@ for code in codes:
         # 乖離率計算
         kairi = ((current_price - base_price) / base_price) * 100
 
-        # 受益権口数取得（dlタグから探す）
+        # 受益権口数取得
         unit_value = "不明"
         dl_tags = soup.find_all("dl", class_="dl__summary-2col")
         for dl in dl_tags:
@@ -66,11 +68,19 @@ for code in codes:
     except Exception as e:
         st.error(f"取得失敗: [{code}] {url} / 理由: {e}")
 
-# 表示（乖離率の絶対値が大きい順）
+# 表示（AgGrid使用）
 if data:
     df = pd.DataFrame(data)
     df["abs_乖離率"] = df["乖離率(%)"].abs()
     df_sorted = df.sort_values(by="abs_乖離率", ascending=False).drop(columns=["abs_乖離率"])
-    st.dataframe(df_sorted)
+
+    gb = GridOptionsBuilder.from_dataframe(df_sorted)
+    gb.configure_default_column(resizable=True, filter=True, sortable=True)
+    gb.configure_column("銘柄コード", pinned="left")
+    gb.configure_column("乖離率(%)", type=["numericColumn"], valueFormatter="x.toFixed(2) + '%'")
+
+    grid_options = gb.build()
+
+    AgGrid(df_sorted, gridOptions=grid_options, height=500, fit_columns_on_grid_load=False)
 else:
     st.warning("データが取得できませんでした。")
