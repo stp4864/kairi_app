@@ -5,3 +5,7 @@ beautifulsoup4
 lxml
 streamlit-aggrid
 streamlit-autorefresh
+matplotlib
+fredapi
+fear-and-greed
+
