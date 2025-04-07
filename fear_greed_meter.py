@@ -11,7 +11,6 @@ FRED_API_KEY = "079c18debaecb9ff5976bc2334771349"
 fred = Fred(api_key=FRED_API_KEY)
 
 # Streamlit設定
-st.set_page_config(page_title="Fear & Greed Meter", layout="centered")
 st.title("\U0001F9E0 Fear & Greed メーター（自動判定）")
 
 # === データ取得 ===
