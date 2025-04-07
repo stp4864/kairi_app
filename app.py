@@ -26,10 +26,23 @@ try:
     df["インディカティブNAV;"] = pd.to_numeric(df["インディカティブNAV;"], errors="coerce")
     df["乖離率(%)"] = ((df["現在値"] - df["インディカティブNAV;"]) / df["インディカティブNAV;"]) * 100
 
-    # 並び替え（絶対乖離率で降順）
+    
+    # 並び替え（最新の時刻 → 乖離率（絶対値）降順 → 出来高降順）
     df_sorted = df.dropna(subset=["乖離率(%)"]).copy()
+
+    # 「時刻」列をdatetime型に変換（例："04/07 10:57" → 2025/04/07 10:57） ※日付は仮に今年で補完
+    df_sorted["日時"] = pd.to_datetime("2025/" + df_sorted["時刻"], format="%Y/%m/%d %H:%M", errors='coerce')
+
     df_sorted["abs_乖離率"] = df_sorted["乖離率(%)"].abs()
-    df_sorted = df_sorted.sort_values(by="abs_乖離率", ascending=False).drop(columns=["abs_乖離率"])
+    df_sorted["出来高"] = pd.to_numeric(df_sorted["出来高"], errors="coerce").fillna(0)
+
+    df_sorted = df_sorted.sort_values(
+        by=["日時", "abs_乖離率", "出来高"],
+        ascending=[False, False, False]
+    ).drop(columns=["abs_乖離率", "日時"])
+
+
+
 
     # カラムの順番を指定（「時刻」を「現在値」の右に配置）
     cols = list(df_sorted.columns)
