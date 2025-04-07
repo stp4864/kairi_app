@@ -29,10 +29,11 @@ for code in codes:
 
         base_price_tag = soup.select_one("dt:contains('基準価額') + dd .fundprice__price")
         if base_price_tag:
-            base_str = base_price_tag.get_text(strip=True).replace(",", "").replace("円", "")
-            base_raw = float(base_str)
-        else:
-            raise ValueError("基準価格が見つかりません")
+           base_str = base_price_tag.get_text(strip=True).replace(",", "").replace("円", "").replace("*", "")
+           base_raw = float(base_str)
+         else:
+    raise ValueError("基準価格が見つかりません")
+
 
         digits_current = len(str(int(current_price)))
         digits_base = len(str(int(base_raw)))

@@ -70,7 +70,7 @@ st.title("📈 VIX指数ダッシュボード")
 term = st.radio("📅 表示期間を選択", ("Past 1 Week", "Past 1 Month", "Past 3 Months"))
 
 # ⏳ 日付範囲の決定
-today = datetime.today()
+today = datetime.today() - timedelta(days=1)
 if term == "Past 1 Week":
     start_date = today - timedelta(days=7)
 elif term == "Past 1 Month":
