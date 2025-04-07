@@ -119,3 +119,13 @@ multpl_url = "https://www.multpl.com/s-p-500-pe-ratio"
 st.markdown(f"""
 <iframe src="{multpl_url}" width="100%" height="800px" frameborder="0"></iframe>
 """, unsafe_allow_html=True)
+
+# === Fear & Greed 表示（安全に処理） ===
+st.subheader("\U0001F4CA Fear & Greed Index")
+if fg_index:
+    st.metric(label="Current Index", value=f"{fg_value} ({fg_index.description})")
+    st.caption(f"Last updated: {fg_index.last_update.strftime('%Y-%m-%d %H:%M:%S')}")
+else:
+    st.write("データ取得に失敗しました。")
+
+st.markdown("[🔗 CNN公式のFear & Greed Indexページはこちら](https://edition.cnn.com/markets/fear-and-greed)")
