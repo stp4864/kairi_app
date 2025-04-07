@@ -112,11 +112,7 @@ st.subheader("\U0001F4CA AAII Sentiment Survey")
 st.markdown("[🔗 AAII公式ページはこちら](https://www.aaii.com/sentimentsurvey)")
 
 
-st.title("S&P500 P/Eレシオ（Multplより）")
+st.subheader("S&P500 P/Eレシオ（Multplより）")
 
-# Webページの埋め込み表示（iframe）
 multpl_url = "https://www.multpl.com/s-p-500-pe-ratio"
-st.markdown(f"""
-<iframe src="{multpl_url}" width="100%" height="800px" frameborder="0"></iframe>
-""", unsafe_allow_html=True)
-
+st.markdown(f"[🔗 Multpl公式のP/Eレシオページはこちら]({multpl_url})")
