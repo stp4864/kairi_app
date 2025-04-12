@@ -116,3 +116,8 @@ st.subheader("S&P500 P/Eレシオ（Multplより）")
 
 multpl_url = "https://www.multpl.com/s-p-500-pe-ratio"
 st.markdown(f"[🔗 Multpl公式のP/Eレシオページはこちら]({multpl_url})")
+
+
+st.subheader("🇺🇸 米国国債（2年～10年）の利回り")
+bond_url = "https://www.investing.com/rates-bonds/usa-government-bonds?maturity_from=100&maturity_to=180"
+st.markdown(f"[🔗 Investing.comの国債ページはこちら]({bond_url})")
