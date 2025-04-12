@@ -121,3 +121,10 @@ st.markdown(f"[🔗 Multpl公式のP/Eレシオページはこちら]({multpl_ur
 st.subheader("🇺🇸 米国国債（2年～10年）の利回り")
 bond_url = "https://www.investing.com/rates-bonds/usa-government-bonds?maturity_from=100&maturity_to=180"
 st.markdown(f"[🔗 Investing.comの国債ページはこちら]({bond_url})")
+
+
+st.subheader("📊 Yield Curve（Gurufocus）")
+st.markdown("[🔗 GurufocusのYield Curveページはこちら](https://www.gurufocus.com/yield_curve.php)")
+
+st.subheader("📊 NASDAQ ADライン（Advance-Decline）")
+st.markdown("[🔗 日経予測 NASDAQ ADライン（1000）はこちら](https://nikkeiyosoku.com/nasdaq/adline/1000/)")
