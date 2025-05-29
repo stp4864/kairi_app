@@ -51,27 +51,21 @@ def fg_score(fg):
 
 
 
- def put_call_score(ratio):
-    if ratio <= 0.5:
-        return 100
-    elif ratio <= 0.6:
-        return 90
-    elif ratio <= 0.7:
-        return 75
-    elif ratio <= 0.8:
-        return 60
-    elif ratio <= 0.9:
-        return 50
-    elif ratio <= 1.0:
-        return 40
-    elif ratio <= 1.1:
-        return 30
-    elif ratio <= 1.2:
-        return 20
-    elif ratio <= 1.3:
-        return 10
-    else:
+def put_call_score(ratio):
+    if ratio >= 1.5:
         return 0
+    elif ratio >= 1.2:
+        return 10
+    elif ratio >= 1.0:
+        return 30
+    elif ratio >= 0.8:
+        return 50
+    elif ratio >= 0.6:
+        return 70
+    elif ratio >= 0.5:
+        return 90
+    else:
+        return 100
 
 def aaii_score(pct):
     if pct <= 20:
